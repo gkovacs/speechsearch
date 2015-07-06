@@ -47,7 +47,7 @@
       <div id="queryimg"><bing-image on-click="sayWord" width="50" height="50" query="{{query}}"></bing-image></div>
       <span on-click="sayWord" id="querytext">{{query}}</span>
       <span on-click="sayWord" id="exampletext">Some example text illustrating the usage of this word will go here</span>
-      <button class="btn btn-large btn-primary"><span id="clickme" class="glyphicon glyphicon-ok"> Learn</span></button>
+      <button on-click="openLesson" class="btn btn-large btn-primary"><span id="clickme" class="glyphicon glyphicon-ok"> Learn</span></button>
       <voice-player accent="en-US" text="{{query}}"></voice-player>
     </div>
   </template>

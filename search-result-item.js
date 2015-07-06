@@ -11,6 +11,12 @@
     },
     sayWord: function(){
       return this.$$('voice-player').speak();
+    },
+    openLesson: function(){
+      return window.open('http://scriptlearn.herokuapp.com/?' + $.param({
+        lang: 'en',
+        word: this.query
+      }));
     }
   });
 }).call(this);
