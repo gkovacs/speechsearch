@@ -6,7 +6,7 @@
   path = require('path');
   getsecret = require('getsecret');
   throttle_call = require('throttle_call');
-  func_cache = require('./mongo_func_cache')();
+  func_cache = require('func_cache_mongo')();
   bing_api_key = getsecret('bing_api_key');
   Bing = require('node-bing-api')({
     accKey: bing_api_key

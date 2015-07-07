@@ -23,44 +23,63 @@
         observer: 'isrecordingChanged'
       }
     },
-    buttonClicked: function(){
+    endRecording: function(){
+      var recognition, candidates, res$, i$, ref$, len$, x;
+      if (this.recognition == null) {
+        return;
+      }
+      recognition = this.recognition;
+      recognition.stop();
+      this.isrecording = false;
+      if (this.results == null) {
+        return;
+      }
+      res$ = [];
+      for (i$ = 0, len$ = (ref$ = this.results[0]).length; i$ < len$; ++i$) {
+        x = ref$[i$];
+        res$.push(x.transcript);
+      }
+      candidates = res$;
+      if (this.onresults != null) {
+        return this.onresults(candidates);
+      }
+    },
+    startRecording: function(){
       var self, recognition;
       self = this;
       console.log(this.language);
       recognition = this.recognition = new webkitSpeechRecognition();
       recognition.lang = this.language;
       recognition.continuous = false;
-      recognition.interimResults = false;
+      recognition.interimResults = true;
       recognition.maxAlternatives = 10;
       recognition.onstart = function(event){
         return self.isrecording = true;
       };
       recognition.onresult = function(event){
-        var candidates, res$, i$, ref$, len$, x;
-        if (true) {
-          recognition.stop();
-          res$ = [];
-          for (i$ = 0, len$ = (ref$ = event.results[0]).length; i$ < len$; ++i$) {
-            x = ref$[i$];
-            res$.push(x.transcript);
-          }
-          candidates = res$;
-          if (self.onresults != null) {
-            self.onresults(candidates);
-          }
-          return self.isrecording = false;
+        console.log(event.results);
+        self.results = event.results;
+        if (event.results[0].isFinal) {
+          return self.endRecording();
         }
       };
       return recognition.start();
+    },
+    buttonClicked: function(){
+      if (this.isrecording) {
+        return this.endRecording();
+      } else {
+        return this.startRecording();
+      }
     },
     isrecordingChanged: function(newval, oldval){
       if (newval === oldval) {
         return;
       }
       if (newval) {
-        return this.$$('img').src = 'speech-recognition-stop.webp';
+        return this.$$('#speechicon').src = 'speech-recognition-stop.webp';
       } else {
-        return this.$$('img').src = 'speech-recognition.webp';
+        return this.$$('#speechicon').src = 'speech-recognition.webp';
       }
     }
   });

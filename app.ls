@@ -18,6 +18,8 @@ app.set 'port', (process.env.PORT || 8080)
 
 app.use express.static(path.join(__dirname, ''))
 
+# images
+
 get_image_url = (query, callback) ->
   Bing.images query, {}, (error, res2, body) ->
     #callback body.d.results[0].MediaUrl
@@ -33,5 +35,7 @@ get_image_url_cached_throttled = throttle_call get_image_url_cached
 app.get '/image', (req, res) ->
   get_image_url_cached_throttled req.query.name, (imgurl) ->
     res.send imgurl
+
+# example sentences
 
 app.listen app.get('port'), '0.0.0.0'

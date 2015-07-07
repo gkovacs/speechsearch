@@ -21,32 +21,45 @@ Polymer {
       observer: 'isrecordingChanged'
     }
   }
-  buttonClicked: ->
+  endRecording: ->
+    if not this.recognition?
+      return
+    recognition = this.recognition
+    recognition.stop()
+    this.isrecording = false
+    if not this.results?
+      return
+    #console.log event.results[0]
+    candidates = [x.transcript for x in this.results[0]]
+    #console.log candidates
+    if this.onresults?
+      this.onresults(candidates)
+  startRecording: ->
     self = this
     console.log this.language
     recognition = this.recognition = new webkitSpeechRecognition()
     recognition.lang = this.language
     recognition.continuous = false
-    recognition.interimResults = false
+    recognition.interimResults = true
     recognition.maxAlternatives = 10
     recognition.onstart = (event) ->
       self.isrecording = true
     recognition.onresult = (event) ->
-      #if event.results[0].isFinal
-      if true
-        recognition.stop()
-        #console.log event.results[0]
-        candidates = [x.transcript for x in event.results[0]]
-        #console.log candidates
-        if self.onresults?
-          self.onresults(candidates)
-        self.isrecording = false
+      console.log event.results
+      self.results = event.results
+      if event.results[0].isFinal
+        self.endRecording()
     recognition.start()
+  buttonClicked: ->
+    if this.isrecording
+      this.endRecording()
+    else
+      this.startRecording()
   isrecordingChanged: (newval, oldval) ->
     if newval == oldval
       return
     if newval
-      this.$$('img').src = 'speech-recognition-stop.webp'
+      this.$$('#speechicon').src = 'speech-recognition-stop.webp'
     else
-      this.$$('img').src = 'speech-recognition.webp'
+      this.$$('#speechicon').src = 'speech-recognition.webp'
 }
