@@ -87,6 +87,20 @@
         observer: 'hiddenKeysChanged'
       }
     },
+    keyTyped: function(evt, key){
+      this.fire('key-typed', key);
+    }
+    /*
+    attached: ->
+      self = this
+      setTimeout ->
+        console.log 'ready!'
+        console.log $(self).find('keyboard-button')
+        for x in $(self).find('keyboard-button')
+          console.log x
+          x.clickcallback = self.keyClicked
+      , 1000
+    */,
     isKeySpecial: function(key){
       if (key.special === 'backspace') {
         return 'backspace';

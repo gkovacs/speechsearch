@@ -116,12 +116,7 @@
       keysynth.src = '/lettersound/' + sound + '.mp3';
       keysynth.currentTime = 0;
       keysynth.play();
-      if (this.clickCallback != null) {
-        return this.clickCallback();
-      }
-    },
-    setClickCallback: function(callback){
-      return this.clickCallback = callback;
+      return this.fire('key-typed', this);
     }
   });
 }).call(this);

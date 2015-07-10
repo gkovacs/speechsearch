@@ -102,8 +102,8 @@ Polymer {
     keysynth.src = '/lettersound/' + sound + '.mp3'
     keysynth.currentTime = 0
     keysynth.play()
-    if this.clickCallback?
-      this.clickCallback()
-  setClickCallback: (callback) ->
-    this.clickCallback = callback
+    this.fire 'key-typed', this
+  #setClickCallback: (callback) ->
+  #  console.log 'set click callback'
+  #  this.clickcallback = callback
 }

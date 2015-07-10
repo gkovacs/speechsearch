@@ -13,7 +13,7 @@
       return this.$$('voice-player').speak();
     },
     openLesson: function(){
-      return window.open('http://scriptlearn.herokuapp.com/?' + $.param({
+      return window.open('/studyword.html?' + $.param({
         lang: 'en',
         word: this.query
       }));

@@ -1,101 +1,84 @@
+synthesize_word = (word) ->
+  synth_lang = 'en'
+  video_tag = $('#synthesizeword')
+  if video_tag.length == 0
+    video_tag = $('<video>').prop('id', 'synthesizeword').css({display: 'none'})
+    $('body').append video_tag
+  video_tag.attr 'src', 'http://speechsynth.herokuapp.com/speechsynth?' + $.param({lang: synth_lang, word})
+  video_tag[0].currentTime = 0
+  video_tag[0].play()
+
 Polymer {
   is: 'practice-word'
   properties: {
     word: {
       type: String
-      value: 'dog'
+      value: ''
+      observer: 'wordChanged'
     }
-    hiddenkeys: {
+    difficulty: {
+      type: Number
+      value: 0
+      observer: 'shownKeysChanged'
+    }
+    partialword: {
       type: String
-      value: '' #[\a to \z].join('')
-      observer: 'hiddenKeysChanged'
+      value: ''
+      observer: 'partialwordChanged'
     }
   }
-  isKeySpecial: (key) ->
-    if key.special == 'backspace'
-      return 'backspace'
-    return ''
-  getKeyColor: (key) ->
-    cvowel = 'yellow'
-    csemivowel = '#FFA500' # orange
-    cnasal = '#FF5533' # red
-    cstop = '#77AAFF' # blue
-    cstop_voiced = '#5577FF'
-    cfricative = '#AAFFAA' # green
-    cfricative_voiced = '#00FF00'
-    cstop_voiced = cstop
-    cfricative_voiced = cfricative
-    keysound = key.sound
-    key = this.getKeyText key
-    if key == 'c' or key == 'g'
-      return '#00FFFF'
-    if keysound == 'g_hard'
-      return cstop_voiced
-    if keysound == 'c_hard'
-      return cstop
-    if keysound == 'c_soft'
-      return cfricative
-    if keysound == 'g_soft'
-      return cfricative_voiced
-    if 'yw'.indexOf(key) != -1
-      return csemivowel
-    if 'aeoiuyw'.indexOf(key) != -1
-      return cvowel
-    if 'mnlr'.indexOf(key) != -1
-      return cnasal
-    if 'bdg'.indexOf(key) != -1
-      return cstop_voiced
-    if 'bpdtgkqxc'.indexOf(key) != -1
-      return cstop
-    if 'vzjg'.indexOf(key) != -1
-      return cfricative_voiced
-    if 'fvszcjhg'.indexOf(key) != -1
-      return cfricative
-  getKeySound: (key) ->
-    if key.sound?
-      return key.sound
-    return ''
-  getKeyText: (key) ->
-    if typeof key == typeof ''
-      return key
+  playword: ->
+    synthesize_word this.word
+  #ready: ->
+  #  console.log 'practice word ready'
+  #  this.playword()
+  wordChanged: ->
+    this.playword()
+    this.shownKeysChanged()
+  partialwordChanged: ->
+    this.$$('#inputarea').innerText = this.partialword
+    this.shownKeysChanged()
+  keyTyped: (evt, key) ->
+    letter = key.keytext
+    next_letter = this.nextLetter()
+    if letter != next_letter
+      #keyboard.shownkeys = next_letter
+      this.difficulty = 0
+      this.partialword = ''
+    if letter == next_letter # typed correctly
+      if this.partialword + letter == this.word # is last letter in word
+        if this.difficulty < 3
+          this.difficulty += 1
+        else
+          window.location = 'https://www.google.com/search?site=&tbm=isch&q=' + this.word
+        this.partialword = ''
+        setTimeout ~>
+          this.playword()
+        , 500
+      else
+        this.partialword = this.partialword + letter
+  nextLetter: ->
+    if this.word == this.partialword or not this.word? or not this.partialword?
+      return ''
+    return this.word[this.partialword.length]
+  shownKeysChanged: ->
+    keyboard = this.$$('#keyboard')
+    next_letter = this.nextLetter()
+    console.log 'next_letter is:' + next_letter
+    if this.partialword?
+      console.log this.partialword.length
+      this.$$('#wordspan').highlightidx = this.partialword.length
+    if this.difficulty == 0
+      keyboard.shownkeys = next_letter
+    if this.difficulty == 1
+      keyboard.shownkeys = this.word
+    if this.difficulty == 2
+      keyboard.shownkeys = [\a to \z].join('')
+    if this.difficulty == 3
+      keyboard.shownkeys = [\a to \z].join('')
+    if this.difficulty == 3
+      this.$$('#wordspan').style.visibility = 'hidden'
     else
-      return key.text
-  getKeyWidth: (key) ->
-    if key.width?
-      return key.width
-    return 2
-  getKeyHeight: (key) ->
-    if key.height?
-      return key.height
-    return 2
-  getKeyMarginLeft: (key) ->
-    if key.marginleft?
-      return key.marginleft
-    return 0
-  getKeyMarginRight: (key) ->
-    if key.marginright?
-      return key.marginright
-    return 0
-  getKeyMarginTop: (key) ->
-    if key.margintop?
-      return key.margintop
-    return 0
-  getKeyId: (key) ->
-    key = this.getKeyText key
-    return 'key' + key
-  hiddenKeysChanged: (newvalue, oldvalue) ->
-    for x in $(this).find('keyboard-button')
-      x.ishidden = this.isKeyHidden(x.keytext)
-    #for x in (newvalue + oldvalue).split('')
-    #  curkey = this.$$('#key' + x)
-    #  if curkey?
-    #    curkey.ishidden = this.isKeyHidden(x)
-    #    #curkey.visibilityChanged()
-  #computeKeyLines: (keys) ->
-  #  return keys.split(';')
-  #computeKeysArray: (keys) ->
-  #  return keys.split('')
-  isKeyHidden: (key) ->
-    key = this.getKeyText key
-    return this.hiddenkeys.indexOf(key) != -1
+      this.$$('#wordspan').style.visibility = 'visible'
+    #keyboard.shownkeys = this.word
 }
