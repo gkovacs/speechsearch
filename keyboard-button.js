@@ -11,7 +11,65 @@
         type: Boolean,
         value: false,
         observer: 'visibilityChanged'
+      },
+      silent: {
+        type: Boolean,
+        value: false
+      },
+      width: {
+        type: Number,
+        value: 2,
+        observer: 'widthChanged'
+      },
+      height: {
+        type: Number,
+        value: 2,
+        observer: 'heightChanged'
+      },
+      marginleft: {
+        type: Number,
+        value: 0,
+        observer: 'marginLeftChanged'
+      },
+      marginright: {
+        type: Number,
+        value: 0,
+        observer: 'marginRightChanged'
+      },
+      margintop: {
+        type: Number,
+        value: 0,
+        observer: 'marginTopChanged'
+      },
+      sound: {
+        type: String,
+        value: ''
+      },
+      color: {
+        type: String,
+        value: 'white',
+        observer: 'colorChanged'
       }
+    },
+    colorChanged: function(){
+      return this.style.backgroundColor = this.color;
+    },
+    marginLeftChanged: function(){
+      return this.style.marginLeft = Math.floor(25 * this.marginleft) + 'px';
+    },
+    marginRightChanged: function(){
+      return this.style.marginRight = Math.floor(25 * this.marginright) + 'px';
+    },
+    marginTopChanged: function(){
+      return this.style.marginTop = Math.floor(25 * this.margintop) + 'px';
+    },
+    widthChanged: function(){
+      return this.style.width = this.width * 25 + 'px';
+    },
+    heightChanged: function(){
+      this.style.height = this.height * 25 + 'px';
+      this.style.fontSize = this.height * 16 + 'px';
+      return this.style.lineHeight = this.height * 25 + 'px';
     },
     visibilityChanged: function(){
       if (this.ishidden) {
@@ -21,7 +79,17 @@
       }
     },
     handleClick: function(){
+      var keysynth, sound;
       console.log('clicked: ' + this.keytext);
+      keysynth = this.$$('#keysynth');
+      keysynth.pause();
+      sound = this.sound;
+      if (sound == null || sound.length === 0) {
+        sound = this.keytext;
+      }
+      keysynth.src = '/lettersound/' + sound + '.mp3';
+      keysynth.currentTime = 0;
+      keysynth.play();
       if (this.clickCallback != null) {
         return this.clickCallback();
       }
