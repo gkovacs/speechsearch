@@ -12,7 +12,7 @@ Polymer {
           {text: 'p', marginright: 0.5}
           'f'
           'v'
-          {text: '←', sound: 'undo', special: 'backspace', marginleft: 1.0}
+          # {text: '←', sound: 'undo', special: 'backspace', marginleft: 1.0}
         ]
         [
           # row 2
