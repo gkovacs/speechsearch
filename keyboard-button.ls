@@ -6,6 +6,10 @@ Polymer {
       value: 'a'
       observer: 'keytextChanged'
     }
+    keyscale: {
+      type: Number
+      value: 1.5
+    }
     isspecial: {
       type: String
       value: ''
@@ -76,17 +80,17 @@ Polymer {
   colorChanged: ->
     this.style.backgroundColor = this.color
   marginLeftChanged: ->
-    this.style.marginLeft = Math.floor(25*this.marginleft) + 'px'
+    this.style.marginLeft = Math.round(25*this.keyscale*this.marginleft) + 'px'
   marginRightChanged: ->
-    this.style.marginRight = Math.floor(25*this.marginright) + 'px'
+    this.style.marginRight = Math.round(25*this.keyscale*this.marginright) + 'px'
   marginTopChanged: ->
-    this.style.marginTop = Math.floor(25*this.margintop) + 'px'
+    this.style.marginTop = Math.round(25*this.keyscale*this.margintop) + 'px'
   widthChanged: ->
-    this.style.width = (this.width*25) + 'px'
+    this.style.width = Math.round(this.width*25*this.keyscale) + 'px'
   heightChanged: ->
-    this.style.height = (this.height*25) + 'px'
-    this.style.fontSize = (this.height*16) + 'px'
-    this.style.lineHeight = (this.height*25) + 'px'
+    this.style.height = Math.round(this.height*25*this.keyscale) + 'px'
+    this.style.fontSize = Math.round(this.height*16*this.keyscale) + 'px'
+    this.style.lineHeight = Math.round(this.height*25*this.keyscale) + 'px'
   visibilityChanged: ->
     if this.ishidden
       this.style.visibility = 'hidden'

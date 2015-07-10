@@ -8,6 +8,10 @@
         value: 'a',
         observer: 'keytextChanged'
       },
+      keyscale: {
+        type: Number,
+        value: 1.5
+      },
       isspecial: {
         type: String,
         value: '',
@@ -81,21 +85,21 @@
       return this.style.backgroundColor = this.color;
     },
     marginLeftChanged: function(){
-      return this.style.marginLeft = Math.floor(25 * this.marginleft) + 'px';
+      return this.style.marginLeft = Math.round(25 * this.keyscale * this.marginleft) + 'px';
     },
     marginRightChanged: function(){
-      return this.style.marginRight = Math.floor(25 * this.marginright) + 'px';
+      return this.style.marginRight = Math.round(25 * this.keyscale * this.marginright) + 'px';
     },
     marginTopChanged: function(){
-      return this.style.marginTop = Math.floor(25 * this.margintop) + 'px';
+      return this.style.marginTop = Math.round(25 * this.keyscale * this.margintop) + 'px';
     },
     widthChanged: function(){
-      return this.style.width = this.width * 25 + 'px';
+      return this.style.width = Math.round(this.width * 25 * this.keyscale) + 'px';
     },
     heightChanged: function(){
-      this.style.height = this.height * 25 + 'px';
-      this.style.fontSize = this.height * 16 + 'px';
-      return this.style.lineHeight = this.height * 25 + 'px';
+      this.style.height = Math.round(this.height * 25 * this.keyscale) + 'px';
+      this.style.fontSize = Math.round(this.height * 16 * this.keyscale) + 'px';
+      return this.style.lineHeight = Math.round(this.height * 25 * this.keyscale) + 'px';
     },
     visibilityChanged: function(){
       if (this.ishidden) {
