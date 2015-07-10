@@ -17,7 +17,12 @@
             }, 'b', {
               text: 'p',
               marginright: 0.5
-            }, 'f', 'v'
+            }, 'f', 'v', {
+              text: '$',
+              sound: 'undo',
+              special: 'backspace',
+              marginleft: 1.0
+            }
           ], [
             'e', {
               text: 'o',
@@ -76,6 +81,12 @@
         value: '',
         observer: 'hiddenKeysChanged'
       }
+    },
+    isKeySpecial: function(key){
+      if (key.special === 'backspace') {
+        return 'backspace';
+      }
+      return '';
     },
     getKeyColor: function(key){
       var cvowel, csemivowel, cnasal, cstop, cstop_voiced, cfricative, cfricative_voiced, keysound;

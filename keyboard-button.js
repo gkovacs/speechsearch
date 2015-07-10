@@ -5,7 +5,13 @@
     properties: {
       keytext: {
         type: String,
-        value: 'a'
+        value: 'a',
+        observer: 'keytextChanged'
+      },
+      isspecial: {
+        type: String,
+        value: '',
+        observer: 'isspecialChanged'
       },
       ishidden: {
         type: Boolean,
@@ -50,6 +56,26 @@
         value: 'white',
         observer: 'colorChanged'
       }
+    },
+    isspecialChanged: function(){
+      if (this.isspecial.length === 0) {
+        return;
+      }
+      console.log('have isspecial' + this.isspecial);
+      if (this.isspecial === 'backspace') {
+        console.log('isspecial backspace');
+        this.style.border = 'none';
+        this.style.margin = 'none';
+        this.style.height = '48px';
+        this.style.padding = 'none';
+        return this.$$('#keytext').innerHTML = '<img src="backspace.png" style="height: 48px; margin: 0; padding: 0">';
+      }
+    },
+    keytextChanged: function(){
+      if (this.isspecial != null && this.isspecial.length > 0) {
+        return;
+      }
+      return this.$$('#keytext').innerHTML = this.keytext;
     },
     colorChanged: function(){
       return this.style.backgroundColor = this.color;

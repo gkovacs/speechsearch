@@ -4,6 +4,12 @@ Polymer {
     keytext: {
       type: String
       value: 'a'
+      observer: 'keytextChanged'
+    }
+    isspecial: {
+      type: String
+      value: ''
+      observer: 'isspecialChanged'
     }
     ishidden: {
       type: Boolean
@@ -52,6 +58,21 @@ Polymer {
   #ready: ->
   #  if this.ishidden
   #    this.style.visibility = 'hidden'
+  isspecialChanged: ->
+    if this.isspecial.length == 0
+      return
+    console.log 'have isspecial' + this.isspecial
+    if this.isspecial == 'backspace'
+      console.log 'isspecial backspace'
+      this.style.border = 'none'
+      this.style.margin = 'none'
+      this.style.height = '48px'
+      this.style.padding = 'none'
+      this.$$('#keytext').innerHTML = '<img src="backspace.png" style="height: 48px; margin: 0; padding: 0">'
+  keytextChanged: ->
+    if this.isspecial? and this.isspecial.length > 0
+      return
+    this.$$('#keytext').innerHTML = this.keytext
   colorChanged: ->
     this.style.backgroundColor = this.color
   marginLeftChanged: ->

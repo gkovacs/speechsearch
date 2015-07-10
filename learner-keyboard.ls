@@ -12,6 +12,7 @@ Polymer {
           {text: 'p', marginright: 0.5}
           'f'
           'v'
+          {text: '$', sound: 'undo', special: 'backspace', marginleft: 1.0}
         ]
         [
           # row 2
@@ -52,6 +53,10 @@ Polymer {
       observer: 'hiddenKeysChanged'
     }
   }
+  isKeySpecial: (key) ->
+    if key.special == 'backspace'
+      return 'backspace'
+    return ''
   getKeyColor: (key) ->
     cvowel = 'yellow'
     csemivowel = '#FFA500' # orange
