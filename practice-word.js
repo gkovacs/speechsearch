@@ -49,12 +49,32 @@
       return this.shownKeysChanged();
     },
     keyTyped: function(evt, key){
-      var letter, next_letter, this$ = this;
+      var keyboard, letter, next_letter, newkeys, x, this$ = this;
+      keyboard = this.$$('#keyboard');
       letter = key.keytext;
       next_letter = this.nextLetter();
       if (letter !== next_letter) {
-        this.difficulty = 0;
-        this.partialword = '';
+        this.incorrect += 1;
+        if (this.incorrect >= 3) {
+          if (this.difficulty > 0) {
+            this.difficulty = this.difficulty - 1;
+          }
+          this.partialword = '';
+        } else {
+          newkeys = (function(){
+            var i$, ref$, len$, results$ = [];
+            for (i$ = 0, len$ = (ref$ = keyboard.shownkeys.split('')).length; i$ < len$; ++i$) {
+              x = ref$[i$];
+              if (x !== letter) {
+                results$.push(x);
+              }
+            }
+            return results$;
+          }()).join('');
+          console.log('new keys shown are:');
+          console.log(newkeys);
+          keyboard.shownkeys = newkeys;
+        }
       }
       if (letter === next_letter) {
         if (this.partialword + letter === this.word) {
@@ -80,6 +100,7 @@
     },
     shownKeysChanged: function(){
       var keyboard, next_letter;
+      this.incorrect = 0;
       keyboard = this.$$('#keyboard');
       next_letter = this.nextLetter();
       console.log('next_letter is:' + next_letter);

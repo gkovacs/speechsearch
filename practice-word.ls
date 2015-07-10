@@ -39,12 +39,21 @@ Polymer {
     this.$$('#inputarea').innerText = this.partialword
     this.shownKeysChanged()
   keyTyped: (evt, key) ->
+    keyboard = this.$$('#keyboard')
     letter = key.keytext
     next_letter = this.nextLetter()
     if letter != next_letter
       #keyboard.shownkeys = next_letter
-      this.difficulty = 0
-      this.partialword = ''
+      this.incorrect += 1
+      if this.incorrect >= 3
+        if this.difficulty > 0
+          this.difficulty = this.difficulty - 1
+        this.partialword = ''
+      else
+        newkeys = [x for x in keyboard.shownkeys.split('') when x != letter].join('')
+        console.log 'new keys shown are:'
+        console.log newkeys
+        keyboard.shownkeys = newkeys
     if letter == next_letter # typed correctly
       if this.partialword + letter == this.word # is last letter in word
         if this.difficulty < 3
@@ -62,6 +71,7 @@ Polymer {
       return ''
     return this.word[this.partialword.length]
   shownKeysChanged: ->
+    this.incorrect = 0
     keyboard = this.$$('#keyboard')
     next_letter = this.nextLetter()
     console.log 'next_letter is:' + next_letter
