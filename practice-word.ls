@@ -1,67 +1,15 @@
 Polymer {
-  is: 'learner-keyboard'
+  is: 'practice-word'
   properties: {
-    keylines: {
-      type: Array
-      value: [
-        [
-          # row 1
-          {text: 'a', width: 4, marginright: 0.5}
-          {text: 'm', marginright: 0.5}
-          'b'
-          {text: 'p', marginright: 0.5}
-          'f'
-          'v'
-          {text: '←', sound: 'undo', special: 'backspace', marginleft: 1.0}
-        ]
-        [
-          # row 2
-          'e'
-          {text: 'o', marginright: 0.5}
-          {text: 'n', marginright: 0.5}
-          'd'
-          {text: 't', marginright: 0.5}
-          's'
-          'z'
-        ]
-        [
-          # row 3
-          'i'
-          {text: 'u', marginright: 0.5}
-          {text: 'l', marginright: 0.5}
-          {text: 'g', sound: 'g_hard'}
-          {text: 'c', sound: 'c_hard', marginright: 0.5}
-          {text: 'c', sound: 'c_soft'}
-          {text: 'g', sound: 'g_soft'}
-        ]
-        [
-          # row 4
-          'y'
-          {text: 'w', marginright: 0.5}
-          {text: 'r', marginright: 0.5}
-          {text: 'q', width: 4/3}
-          {text: 'x', width: 4/3}
-          {text: 'k', width: 4/3, marginright: 0.5}
-          'h'
-          'j'
-        ]
-      ]
-    }
-    hidebackspace: {
-      type: Boolean
-      value: false
-      observer: 'hiddenKeysChanged'
-    }
-    shownkeys: {
+    word: {
       type: String
-      value: [\a to \z].join('')
+      value: 'dog'
+    }
+    hiddenkeys: {
+      type: String
+      value: '' #[\a to \z].join('')
       observer: 'hiddenKeysChanged'
     }
-    #hiddenkeys: {
-    #  type: String
-    #  value: '' #[\a to \z].join('')
-    #  observer: 'hiddenKeysChanged'
-    #}
   }
   isKeySpecial: (key) ->
     if key.special == 'backspace'
@@ -149,8 +97,5 @@ Polymer {
   #  return keys.split('')
   isKeyHidden: (key) ->
     key = this.getKeyText key
-    if key == '←'
-      return this.hidebackspace
-    return this.shownkeys.indexOf(key) == -1
-    #return this.hiddenkeys.indexOf(key) != -1
+    return this.hiddenkeys.indexOf(key) != -1
 }

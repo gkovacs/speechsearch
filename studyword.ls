@@ -6,10 +6,4 @@ window.addEventListener 'WebComponentsReady', (e) ->
   # $('#foo').append($('<name-tag>'))
   # $('#foo').append($('<editable-name-tag>'))
   #$('latin-keyboard').
-  $('#speechrecognition')[0].onresults = (candidates) ->
-    console.log candidates
-    $('#searchresults').html('')
-    for x in candidates
-      #$('<search-result-item query="' + x + '"></search-result-item>').appendTo('#searchresults')
-      $('<search-result-item>').prop('query', x).appendTo('#searchresults')
-  
+  console.log 'hello world'
