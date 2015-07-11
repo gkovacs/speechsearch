@@ -8,6 +8,16 @@ synthesize_word = (word) ->
   video_tag[0].currentTime = 0
   video_tag[0].play()
 
+play_wrong_sound = ->
+  synth_lang = 'en'
+  video_tag = $('#synthesizeword')
+  if video_tag.length == 0
+    video_tag = $('<video>').prop('id', 'synthesizeword').css({display: 'none'})
+    $('body').append video_tag
+  video_tag.attr 'src', '/wrong.mp3'
+  video_tag[0].currentTime = 0
+  video_tag[0].play()
+
 Polymer {
   is: 'practice-word'
   properties: {
@@ -45,10 +55,11 @@ Polymer {
     if letter != next_letter
       #keyboard.shownkeys = next_letter
       this.incorrect += 1
-      if this.incorrect >= 3
-        if this.difficulty > 0
-          this.difficulty = this.difficulty - 1
-        this.partialword = ''
+      play_wrong_sound()
+      #if this.incorrect >= 3
+      #  if this.difficulty > 0
+      #    this.difficulty = this.difficulty - 1
+      #  this.partialword = ''
       else
         newkeys = [x for x in keyboard.shownkeys.split('') when x != letter].join('')
         console.log 'new keys shown are:'
